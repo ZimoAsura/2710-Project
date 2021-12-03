@@ -1,0 +1,66 @@
+{%  extends 'accounts/main.html' %}
+
+{% block content %}
+
+		<br>
+
+		<div class="row">
+
+			<div class="col-md">
+	
+					<div class="card card-body">
+						<h5>Customer</h5>
+					</div>
+
+				<div class="card card-body">
+					<form method="get" style="font-size: medium;">
+						{{myFilter.form}}
+						<button class="btn btn-primary" type="submit">Search</button>
+					</form>
+				</div>
+			
+				<div class="card card-body" >
+					<table class="table" style="font-size: small;">
+						<tr>
+							<th>Name</th>
+							<th>Phone</th>
+							<th>Email</th>
+							<th>Address</th>
+							<th>City</th>
+							<th>Zipcode</th>
+							<th>Category</th>
+							<th>Age</th>
+							<th>Income</th>
+							<th>Gender</th>
+							<th>Marriage</th>
+							<th>Business</th>
+							<th>Business_income</th>
+
+						</tr>
+
+						{% for i in customers %}
+							<tr>
+								<td>{{i.name}}</td>
+								<td>{{i.phone}}</td>
+								<td>{{i.email}}</td>
+								<td>{{i.address}}</td>
+								<td>{{i.city}}</td>
+								<td>{{i.zipcode}}</td>
+								<td>{{i.kind}}</td>
+								<td>{{i.age}}</td>
+								<td>{{i.income}}</td>
+								<td>{{i.gender}}</td>
+								<td>{{i.income}}</td>
+								<td>{{i.business}}</td>
+								<td>{{i.business_income}}</td>
+
+
+							</tr>
+						{% endfor %}
+						
+					</table>
+				</div>
+			</div>
+		</div>
+
+{% endblock content %}

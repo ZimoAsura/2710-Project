@@ -1,0 +1,46 @@
+{%  extends 'accounts/main.html' %}
+
+{% block content %}
+
+		<br>
+
+		<div class="row">
+			<div class="col-md">
+				<div class="card card-body">
+					<h5>Store</h5>
+				</div>
+				<div class="card card-body">
+					<form method="get" style="font-size: medium;">
+						{{myFilter.form}}
+						<button class="btn btn-primary" type="submit">Search</button>
+					</form>
+				</div>
+				<div class="card card-body">
+					<a class="btn btn-primary  btn-sm btn-block" href="{% url 'create_store' %}">Add New Store</a>
+					<table class="table">
+					
+						<tr>
+							<th>Store ID</th>
+							<th>Name</th>
+							<th>Addrerss</th>
+							<th>Region</th>
+						</tr>
+
+						{% for i in stores %}
+							<tr>
+								<td>{{i.id}}</td>
+								<td>{{i.name}}</td>
+								<td>{{i.address}}</td>
+								<td>{{i.region}}</td>
+								<td><a class="btn btn-sm btn-info" href="{% url 'update_store' i.id %}">Update</a></td>
+								<td><a class="btn btn-sm btn-danger" href="{% url 'delete_store' i.id %}">Delete</a></td>
+							</tr>
+						{% endfor %}
+						
+					</table>
+				</div>
+			</div>
+			
+		</div>
+
+{% endblock content %}

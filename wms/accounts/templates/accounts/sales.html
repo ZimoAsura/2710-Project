@@ -1,0 +1,54 @@
+{%  extends 'accounts/main.html' %}
+
+{% block content %}
+
+		<br>
+
+		<div class="row">
+			<div class="col-md">
+				<div class="card card-body">
+					<h5>Sales</h5>
+				</div>
+
+				<div class="card card-body">
+					<form method="get" style="font-size: medium;">
+						{{myFilter.form}}
+						<button class="btn btn-primary" type="submit">Search</button>
+					</form>
+				</div>
+
+				<div class="card card-body">
+					<a class="btn btn-primary  btn-sm btn-block" href="{% url 'create_sale' %}" style="color:white;">Add New Salesperson</a>
+					<table class="table">
+					
+						<tr>
+							<th>Sales ID</th>
+							<th>Name</th>
+							<th>Address</th>
+							<th>Email</th>
+                            <th>Job Title</th>
+                            <th>Store Assigned</th>
+                            <th>Salary</th>
+						</tr>
+
+						{% for i in sales %}
+							<tr>
+                                <td>{{i.id}}</td>
+								<td>{{i.name}}</td>
+								<td>{{i.address}}</td>
+								<td>{{i.email}}</td>
+								<td>{{i.title}}</td>
+                                <td>{{i.store}}</td>
+                                <td>{{i.salary}}</td>
+								<td><a class="btn btn-sm btn-info" href="{% url 'update_sale' i.id %}">Update</a></td>
+								<td><a class="btn btn-sm btn-danger" href="{% url 'delete_sale' i.id %}">Delete</a></td>
+							</tr>
+						{% endfor %}
+						
+					</table>
+				</div>
+			</div>
+			
+		</div>
+
+{% endblock content %}
