@@ -20,11 +20,12 @@
 				</div>
 			
 				<div class="card card-body" >
-					<a class="btn btn-primary  btn-sm btn-block" href="{% url 'create_product' %}">Add New Region</a>
+					<a class="btn btn-primary  btn-sm btn-block" href="{% url 'create_region' %}">Add New Region</a>
 					<table class="table" >
 						<tr>
 							<th>Region ID</th>
 							<th>Name</th>
+		
 
 						</tr>
 
@@ -32,6 +33,7 @@
 							<tr>
 								<td>{{i.id}}</td>
 								<td>{{i.name}}</td>
+								<td><a class="btn btn-sm btn-danger" href="{% url 'delete_region' i.id %}">Delete</a></td>
 
 							</tr>
 						{% endfor %}

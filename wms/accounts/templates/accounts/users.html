@@ -10,7 +10,6 @@
 	
 					<div class="card card-body">
 						<h5>Customer</h5>
-					</div>
 
 				<div class="card card-body">
 					<form method="get" style="font-size: medium;">
@@ -20,6 +19,7 @@
 				</div>
 			
 				<div class="card card-body" >
+					<a class="btn btn-primary  btn-sm btn-block" href="{% url 'create_user' %}">Create Customer</a>
 					<table class="table" style="font-size: small;">
 						<tr>
 							<th>Name</th>
@@ -53,6 +53,7 @@
 								<td>{{i.income}}</td>
 								<td>{{i.business}}</td>
 								<td>{{i.business_income}}</td>
+								<td><a class="btn btn-sm btn-info" href="{% url 'customer' i.id %}">View</a></td>
 
 
 							</tr>

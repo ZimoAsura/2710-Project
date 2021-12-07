@@ -1,0 +1,22 @@
+{% extends 'store/user-page.html' %}
+{% load static %}
+{% block content %}
+	<div class="row">
+		<h2> hello </h2>
+		{% for store in stores %}
+		<div class="col-lg-4">
+			<div class="box-element product">
+				<h4><strong>{{store.name}}</strong></h4>
+				<hr>
+
+				<button data-product="{{product.id}}" data-action="add" class="btn btn-outline-secondary add-btn update-cart">Enter Store</button>
+				
+				{% comment %} <a class="btn btn-outline-success" href="#">View</a> {% endcomment %}
+				<h4 style="display: inline-block; float: right"><strong>{{store.region}}</strong></h4>
+
+			</div>
+		</div>
+		{% endfor %}
+	</div>
+
+{% endblock content %}

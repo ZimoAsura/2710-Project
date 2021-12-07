@@ -1,0 +1,121 @@
+{% extends 'store/user-page.html' %}
+{% load static %}
+{% block content %}
+     <div class="row">
+		<div class="col-lg-6">
+			<div class="box-element" id="form-wrapper">
+				<form id="form">
+					<div id="user-info">
+						{% comment %} <div class="form-field"> {% endcomment %}
+							<div> Name: {{user.customer.name}} </div>
+							<div> Phone: {{user.customer.phone}} </div>
+							<div> Email: {{user.customer.email}} </div>
+							<div> Address: {{user.customer.address}} </div>
+							{% comment %} <input required class="form-control" type="text" name="name" placeholder="Name.."> {% endcomment %}
+						{% comment %} </div> {% endcomment %}
+						{% comment %} <div class="form-field">
+							<input required class="form-control" type="email" name="email" placeholder="Email..">
+						</div> {% endcomment %}
+					</div>
+
+					<hr>
+					<input id="form-button" class="btn btn-success btn-block" type="submit" value="Continue">
+				</form>
+			</div>
+
+			<br>
+			
+		</div>
+
+		<div class="col-lg-6">
+			<div class="box-element">
+				<a  class="btn btn-outline-dark" href="{% url 'cart' order.sales.id %}">&#x2190; Back to Cart</a>
+				<hr>
+				<h3>Order Summary</h3>
+				<hr>
+				{% for item in items %}
+				<div class="cart-row">
+					<div style="flex:2"><img class="row-image" src="{{item.product.imageURL}}"></div>
+					<div style="flex:2"><p>{{item.product.name}}</p></div>
+					<div style="flex:1"><p>${{item.product.price|floatformat:2}}</p></div>
+					<div style="flex:1"><p>x{{item.quantity}}</p></div>
+				</div>
+				{% endfor %}
+				<h5>Items:   {{order.get_cart_items}}</h5>
+				<h5>Total:   ${{order.get_cart_total|floatformat:2}}</h5>
+			</div>
+		</div>
+	</div>
+
+	{% comment %} <script src="https://www.paypal.com/sdk/js?client-id=YOUR-CLIENT-ID&currency=USD&disable-funding=credit"></script> {% endcomment %}
+
+	<script>
+		var total = '{{order.get_cart_total}}'
+		var salesId = '{{order.sales.id}}'
+    </script> 
+
+	<script type="text/javascript">
+
+		if (user != 'AnonymousUser'){
+		 	// document.getElementById('user-info').innerHTML = ''
+		 }
+
+		if (user != 'AnonymousUser'){ //shipping == 'False' && 
+			//Hide entire form if user is logged in and shipping is false
+			// document.getElementById('form-wrapper').classList.add("hidden");
+		}
+
+		var form = document.getElementById('form')
+		form.addEventListener('submit', function(e){
+	    	e.preventDefault()
+	    	console.log('Form Submitted...')
+	    	document.getElementById('form-button').classList.add("hidden");
+			submitFormData();
+	    	// document.getElementById('payment-info').classList.remove("hidden");
+	    })
+
+
+	    function submitFormData(){
+	    	console.log('Submit Order')
+
+	    	var userFormData = {
+				'total':total,
+				'salesId':salesId
+			}
+	    	//console.log('Shipping Info:', shippingInfo)
+	    	console.log('User Info:', userFormData)
+
+	    	var url = "/process_order/"
+	    	fetch(url, {
+	    		method:'POST',
+	    		headers:{
+	    			'Content-Type':'applicaiton/json',
+	    			'X-CSRFToken':csrftoken,
+	    		}, 
+	    		body:JSON.stringify({'form':userFormData}),
+	    		
+	    	})
+	    	.then((response) => response.json())
+	    	.then((data) => {
+				if (data == "Successful"){
+					console.log('Success:', data);
+					alert('Transaction completed');  
+	
+					cart = {}
+					document.cookie ='cart=' + JSON.stringify(cart) + ";domain=;path=/"
+	
+					window.location.href = "{% url 'user_store' order.sales.id %}"
+					
+				} else {
+					alert(data)
+					
+				}
+
+
+				})
+	    }
+	</script>
+{% endblock content %}
+
+
+ 

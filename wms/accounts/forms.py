@@ -9,7 +9,7 @@ from .models import *
 
 class OrderForm(ModelForm):
 	class Meta:
-		model = Order
+		model = OrderItem
 		fields = '__all__'
 
 class ProductForm(ModelForm):
@@ -35,4 +35,14 @@ class SalesForm(ModelForm):
 class StoreForm(ModelForm):
 	class Meta:
 		model = Store
+		fields = '__all__'
+
+class RegionForm(ModelForm):
+	class Meta:
+		model = Region
+		fields = '__all__'
+
+class CustomerForm(ModelForm):
+	class Meta:
+		model = Customer
 		fields = '__all__'

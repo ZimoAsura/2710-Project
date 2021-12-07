@@ -7,6 +7,7 @@ urlpatterns = [
 	path('login/', views.loginPage, name="login"),  
 	path('logout/', views.logoutUser, name="logout"),
 
+    # admin page
     path('', views.home, name="home"),
     path('products/', views.products, name='products'),
     path('customer/<str:pk_test>/', views.customer, name="customer"),
@@ -15,6 +16,7 @@ urlpatterns = [
     path('stores/', views.store, name="stores"),
     path('regions/', views.region, name="regions"),
 
+    path('create_user', views.createUser, name="create_user"),
     path('update_user/<str:pk>/', views.updateUser, name="update_user"),
 
     path('create_order/<str:pk>/', views.createOrder, name="create_order"),
@@ -32,5 +34,16 @@ urlpatterns = [
     path('create_store', views.createStore, name="create_store"),
     path('update_store/<str:pk>/', views.updateStore, name="update_store"),
     path('delete_store/<str:pk>/', views.deleteStore, name="delete_store"),
+
+    path('create_region', views.createRegion, name="create_region"),
+    path('delete_region/<str:pk>/', views.deleteRegion, name="delete_region"),
     
+    # user page
+    path('user_store/<str:pk>/', views.user_store, name="user_store"),
+	path('cart/<str:pk>/', views.cart, name="cart"),
+    path('checkout/<str:pk>/', views.checkout, name="checkout"),
+    path('update_item/', views.updateItem, name="update_item"),
+    path('store_list', views.store_list, name="store_list"),
+    path('process_order/', views.processOrder, name="process_order"),
+
 ]
