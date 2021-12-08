@@ -1,7 +1,7 @@
 {% extends 'store/user-page.html' %}
 {% load static %}
 {% block content %}
-	<div class="random-sales">{{sales.name}} is serving you</div>
+	<div class="random-sales">{{sales.name}} from {{sales.store}} is serving you</div>
 	<div class="row">
 		{% for product in products %}
 		<div class="col-lg-4">

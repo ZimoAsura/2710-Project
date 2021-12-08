@@ -45,5 +45,7 @@ urlpatterns = [
     path('update_item/', views.updateItem, name="update_item"),
     path('store_list', views.store_list, name="store_list"),
     path('process_order/', views.processOrder, name="process_order"),
+    path('order_history/<str:pk>/', views.order_history, name="order_history"),
+    path('user_update_user/<str:pk>/', views.user_updateUser, name="user_update_user"),
 
 ]

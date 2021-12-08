@@ -1,0 +1,85 @@
+{% extends 'store/user-page.html' %}
+{% load static %}
+{% block content %}
+
+	<br>
+
+<div class="row">
+	<div class="col-md">
+		<div class="card card-body">
+			<h5>Customer:</h5>
+			<hr>
+			<a class="btn btn-outline-info  btn-sm btn-block" href="{% url 'user_update_user' customer.id %}">Edit Personal Information</a>
+		</div>
+	</div>
+
+	<div class="col-md">
+		<div class="card card-body">
+			<h5>Contact Information</h5>
+			<hr>
+			<p>Name: {{customer.name}}</p>
+			<p>Email: {{customer.email}}</p>
+			<p>Phone: {{customer.phone}}</p>
+		</div>
+	</div>
+
+	<div class="col-md">
+		<div class="card card-body">
+			<h5>Total Orders</h5>
+			<hr>
+			<h1 style="text-align: center;padding: 10px">{{order_count}}</h1>
+		</div>
+	</div>
+</div>
+
+
+<br>
+<div class="row">
+	<div class="col">
+		<div class="card card-body">
+
+			<form method="get">
+				{{myFilter.form}}
+
+		    <button class="btn btn-primary" type="submit">Search</button>
+		  </form>
+
+		</div>
+	</div>
+	
+</div>
+<br>
+
+<div class="row">
+	<div class="col-md">
+		<div class="card card-body">
+
+			<table class="table table-sm">
+				<tr>
+                    <th>Order ID</th>
+					<th>Name</th>
+					<th>Product</th>
+					<th>Date Orderd</th>
+					<th>Quantity</th>
+                    <th>Sales</th>
+
+				</tr>
+
+				{% for order in orders %}
+
+				<tr>
+                    <td>{{order.order.id}}</td>
+					<td>{{order.customer}}</td>
+					<td>{{order.product}}</td>
+					<td>{{order.order.date_ordered}}</td>
+					<td>{{order.quantity}}</td>
+                    <td>{{order.sales}}</td>
+				</tr>
+				{% endfor %}
+
+			</table>
+		</div>
+	</div>
+</div>
+
+{% endblock %}

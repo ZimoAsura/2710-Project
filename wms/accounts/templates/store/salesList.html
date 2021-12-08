@@ -1,0 +1,27 @@
+{% extends 'store/user-page.html' %}
+{% load static %}
+{% block content %}
+	<div class ="row">
+		<h4> Choose your sales </h4>
+	</div>
+	<div class="row">
+		<p>
+		{% for sale in sales %}
+		<div class="col-lg-4">
+			<div class="box-element product">
+				<h4><strong>{{sale.name}}</strong></h4>
+				<hr>
+
+				<button class="btn btn-outline-secondary add-btn update-cart"> 
+					<a href="{% url 'user_store' sale.id %}"> Select Sales</a>
+				</button>
+				
+				{% comment %} <a class="btn btn-outline-success" href="#">View</a> {% endcomment %}
+				<h4 style="display: inline-block; float: right"><strong>{{sale.store}}</strong></h4>
+
+			</div>
+		</div>
+		{% endfor %}
+	</div>
+
+{% endblock content %}

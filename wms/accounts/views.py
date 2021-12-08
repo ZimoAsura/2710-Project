@@ -2,6 +2,8 @@ from django.shortcuts import render, redirect
 from django.forms import inlineformset_factory
 from django.contrib.auth.forms import UserCreationForm
 from django.http import JsonResponse, HttpResponse
+from django.contrib import messages
+
 
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.models import Group
@@ -53,7 +55,7 @@ def loginPage(request):
 			group = user.groups.all()[0].name
 			print(group)
 			if group == 'customer':
-				return redirect('user_store')
+				return redirect('store_list')
 			if group == 'admin':
 				return redirect('home')
 		else:
@@ -223,8 +225,12 @@ def createRegion(request):
 def deleteRegion(request, pk):
 	regions = Region.objects.get(id=pk)
 	if request.method == "POST":
-		regions.delete()
-		return redirect('/regions')
+		try:
+			regions.delete()
+			return redirect('/regions')
+		except:
+			messages.info(request, f'Failed to delete. {regions.name} is a foreign key in other tables')
+			return redirect('/regions')
 
 	context = {'item': regions}
 	return render(request, 'accounts/delete_region.html', context)
@@ -357,7 +363,11 @@ def updateProduct(request, pk):
 def deleteProduct(request, pk):
 	product = Product.objects.get(id=pk)
 	if request.method == "POST":
-		product.delete()
+		try:
+			product.delete()
+		except:
+			messages.info(request, f'Failed to delete. {product.name} is a foreign key in other tables')
+
 		return redirect('/products')
 
 	context = {'item': product}
@@ -405,7 +415,12 @@ def updateSales(request, pk):
 def deleteSale(request, pk):
 	sales = Sales.objects.get(id=pk)
 	if request.method == "POST":
-		sales.delete()
+		try:
+			sales.delete()
+		except:
+			messages.info(request, f'Failed to delete. {sales.name} is a foreign key in other tables')
+
+
 		return redirect('/sales')
 
 	context = {'item': sales}
@@ -469,10 +484,9 @@ def user_store(request, pk=None): # pk is sales id
 	cartItems = data['cartItems']
 	order = data['order']
 	items = data['items']
-
-	products = Product.objects.all()
-	# print(products)
-	sale = Sales.objects.get(id=1) #random.choice(Sales.objects.all())
+	sale_store = Sales.objects.values_list('store', flat=True).get(id=pk)
+	print(sale_store)
+	products = Product.objects.filter(store = sale_store).all()
 	context = {'products':products, 'cartItems':cartItems, 'sales':data['sales']}
 	return render(request, 'store/storeProducts.html', context)
 
@@ -500,17 +514,16 @@ def checkout(request, pk=None):
 	return render(request, 'store/checkout.html', context)
 
 
+@login_required(login_url='login')
 def store_list(request):
-	stores = Store.objects.all()
-	context = {'stores': stores}
-	return render(request, 'store/storeList.html', context)
+	sales = Sales.objects.all()
+	context = {'sales': sales}
+	return render(request, 'store/salesList.html', context)
 
 
 @login_required(login_url='login')
 def updateItem(request):
 	data = json.loads(request.body)
- 
-	print(data)
 	productId = data['productId']
 	action = data['action']
 	salesId = data['salesId']
@@ -550,6 +563,8 @@ def processOrder(request):
 
 	total = float(data['form']['total'])
 	order.transaction_id = transaction_id
+	# update item
+	order.date_ordered = datetime.datetime.now()
 
 	if total == order.get_cart_total:
 		order.complete = True
@@ -560,10 +575,41 @@ def processOrder(request):
 		if (item.product.inventory < item.quantity):
 			return JsonResponse(f"{item.product.name} inventory is not enough, \n only {item.product.inventory} left", safe=False)
 		item.product.inventory -= item.quantity
-		item.product.save()
-
-		
+		item.date_created = order.date_ordered
+		item.product.save()	
 	
 	order.save()
 
 	return JsonResponse('Successful', safe=False)
+
+@login_required(login_url='login')
+def order_history(request, pk):
+	customer = Customer.objects.get(id=pk)
+
+	orders = customer.orderitem_set.all()
+	orders = orders.filter(order__complete=True).order_by('-date_created')
+	order_count = orders.count()
+
+	myFilter = OrderFilter(request.GET, queryset=orders)
+	orders = myFilter.qs
+ 
+	transactions = customer.order_set.all()
+	
+
+	context = {'customer': customer, 'orders': orders, 'order_count': order_count,
+			   'myFilter': myFilter, 'transactions': transactions}
+	return render(request, 'store/order_history.html', context)
+
+@login_required(login_url='login')
+def user_updateUser(request, pk):
+	customers = Customer.objects.get(id=pk)
+	form = CustomerForm(instance=customers)
+
+	if request.method == 'POST':
+		form = CustomerForm(request.POST, instance=customers)
+		if form.is_valid():
+			form.save()
+			return redirect(f'/order_history/{pk}')
+
+	context = {'form': form}
+	return render(request, 'store/user_customer_form.html', context)
